@@ -7,3 +7,4 @@ C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\StockpileStackLimit\
 C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\StockpileStackLimit\Source\StockpileStackLimit\obj\Release\StockpileStackLimit.pdb
 C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\StockpileStackLimit\Assemblies\StockpileStackLimit.dll
 C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\StockpileStackLimit\Assemblies\StockpileStackLimit.pdb
+C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\StockpileStackLimit\Source\StockpileStackLimit\obj\Release\StockpileStackLimit.csprojAssemblyReference.cache
