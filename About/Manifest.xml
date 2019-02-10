@@ -9,6 +9,6 @@
 		<li>PickUpAndHaul &gt;= 1.5</li>
 	</suggests>
 	<showCrossPromotions>true</showCrossPromotions>
-	<manifestUri>TODO</manifestUri>
-	<downloadUri>TODO</downloadUri>
+	<manifestUri>https://raw.githubusercontent.com/Ilyaki/StockpileStackLimit/master/About/Manifest.xml</manifestUri>
+	<downloadUri>https://github.com/Ilyaki/StockpileStackLimit/releases</downloadUri>
 </Manifest>
