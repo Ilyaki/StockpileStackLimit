@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+	<name>Stockpile Stack Limit</name>
+	<author>Ilyaki</author>
+	<description>Allows you to set a limit on the total item stack per stockpile.
+
+Save friendly!
+	
+Mod compatibility notes:
+- If you have Pick Up And Haul installed, make sure Stockpile Stack Limit is loaded afterwards.</description>
+	<url>TODO</url>
+	<supportedVersions>
+		<li>1.0</li>
+	</supportedVersions>
+</ModMetaData>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Manifest>
+	<identifier>Stockpile Stack Limit</identifier>
+	<version>1.0.0.0</version>
+	<loadAfter>
+		<li>PickUpAndHaul</li>
+	</loadAfter>
+	<suggests>
+		<li>PickUpAndHaul &gt;= 1.5</li>
+	</suggests>
+	<showCrossPromotions>true</showCrossPromotions>
+	<manifestUri>TODO</manifestUri>
+	<downloadUri>TODO</downloadUri>
+</Manifest>
