@@ -12,6 +12,8 @@ namespace StockpileStackLimit
 		static string buffer = "";
 		static StorageSettings oldSettings = null;
 
+		const int max = 9999999;
+
 		public static void Prefix(ref Rect rect)
 		{
 			ITab_Storage tab = ITab_StorageFillTabsPatcher.currentTab;
@@ -40,7 +42,7 @@ namespace StockpileStackLimit
 				if (oldSettings != settings)
 					buffer = limit.ToString();
 
-				Widgets.TextFieldNumeric<int>(new Rect(rect.xMin + (rect.width / 2) + 60f, rect.yMin - 24f - 3f - 32f, rect.width / 2 - 60f, 24f), ref limit, ref buffer, 0, 9999);
+				Widgets.TextFieldNumeric<int>(new Rect(rect.xMin + (rect.width / 2) + 60f, rect.yMin - 24f - 3f - 32f, rect.width / 2 - 60f, 24f), ref limit, ref buffer, 0, max);
 			}
 
 			Limits.SetLimit(settings, hasLimit ? limit : -1);

@@ -12,12 +12,23 @@ namespace StockpileStackLimit
 		{
 			__result = __result.Where(x =>
 			{
+				if (!Limits.HasLimit(x.Settings)) return true;
+
 				int limit = Limits.GetLimit(x.Settings);
 				if (limit < 0) limit = int.MaxValue;
 
-				return x.TotalItemsStack() < limit;
+				return x.TotalPrecalculatedItemsStack() < limit;
 			})
 			.OrderByDescending(x => x.Settings.Priority)
+			.ThenByDescending(x =>
+			{
+				if (!Limits.HasLimit(x.Settings)) return 0;
+
+				int limit = Limits.GetLimit(x.Settings);
+				if (limit < 0) limit = int.MaxValue;
+
+				return limit - x.TotalPrecalculatedItemsStack();
+			})
 			/*.ThenByDescending(x =>
 			{
 				int limit = Limits.GetLimit(x.Settings);
@@ -41,16 +52,27 @@ namespace StockpileStackLimit
 		public static void Postfix(ref List<IHaulDestination> __result)
 		{
 
-			int HeldItems(IHaulDestination x) => StoreUtility.GetSlotGroup(x.Position, x.Map).TotalItemsStack();
+			int HeldItems(IHaulDestination x) => StoreUtility.GetSlotGroup(x.Position, x.Map).TotalPrecalculatedItemsStack();
 
 			__result = __result.Where(x =>
 			{
+				if (!Limits.HasLimit(x.GetStoreSettings())) return true;
+
 				int limit = Limits.GetLimit(x.GetStoreSettings());
 				if (limit < 0) limit = int.MaxValue;
 
 				return HeldItems(x) < limit;
 			})
 			.OrderByDescending(x => x.GetStoreSettings().Priority)
+			.ThenByDescending(x =>
+			{
+				if (!Limits.HasLimit(x.GetStoreSettings())) return 0;
+
+				int limit = Limits.GetLimit(x.GetStoreSettings());
+				if (limit < 0) limit = int.MaxValue;
+
+				return limit - HeldItems(x);
+			})
 			/*.ThenByDescending(x =>
 			{
 				int limit = Limits.GetLimit(x.GetStoreSettings());

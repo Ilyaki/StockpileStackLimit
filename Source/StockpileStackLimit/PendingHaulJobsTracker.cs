@@ -1,13 +1,15 @@
 ﻿using RimWorld;
 using System.Collections.Generic;
 using Verse;
+using ListTuple = System.Collections.Generic.List<StockpileStackLimit.Tuple<int, Verse.Pawn>>;
+using System.Linq;
 
 namespace StockpileStackLimit
 {
 	class PendingHaulJobsTracker
 	{
 		//int is the stack size of the job
-		private static Dictionary<SlotGroup, Tuple<int, Pawn>> pendingHaulJobs = new Dictionary<SlotGroup, Tuple<int, Pawn>>();
+		private static Dictionary<SlotGroup, ListTuple> pendingHaulJobs = new Dictionary<SlotGroup, ListTuple>();
 		private static readonly HashSet<Pawn> pawnsWithHaulingJobs = new HashSet<Pawn>();
 
 		private static Dictionary<SlotGroup, int> precalculatedSlotGroupTotalPendingStack = new Dictionary<SlotGroup, int>();
@@ -21,7 +23,7 @@ namespace StockpileStackLimit
 				{
 					if (s.Key == slotGroup)
 					{
-						x += s.Value.Var1;
+						x += s.Value.Sum(y => y.Var1);
 					}
 				}
 
@@ -40,20 +42,25 @@ namespace StockpileStackLimit
 			{
 				int stack = 0;
 				SlotGroup slotGroup = null;
+				Tuple<int, Pawn>? matchingTuple = null;
 
 				foreach (var x in pendingHaulJobs)
 				{
-					if (x.Value.Var2 == pawn)
+					foreach (var y in x.Value)
 					{
-						stack = x.Value.Var1;
-						slotGroup = x.Key;
-						break;
+						if (y.Var2 == pawn)
+						{
+							stack = y.Var1;
+							slotGroup = x.Key;
+							matchingTuple = y;
+							break;
+						}
 					}
 				}
 
 				if (slotGroup != null)
 				{
-					pendingHaulJobs.Remove(slotGroup);
+					pendingHaulJobs[slotGroup].Remove(matchingTuple.Value);
 
 					if (precalculatedSlotGroupTotalPendingStack.ContainsKey(slotGroup))
 					{
@@ -71,13 +78,22 @@ namespace StockpileStackLimit
 
 		public static void AddNewJob(Pawn pawn, int stackSize, SlotGroup slotGroup, bool clearPreviousJob = true)
 		{
-			if (slotGroup == null) return;
-
 			if (clearPreviousJob)
 				ClearJobForPawn(pawn);
 
-			pendingHaulJobs.Remove(slotGroup);
-			pendingHaulJobs.Add(slotGroup, Tuple.Create(stackSize, pawn));
+			if (slotGroup == null) return;
+
+			//pendingHaulJobs.Remove(slotGroup);
+			ListTuple list;
+			if (pendingHaulJobs.ContainsKey(slotGroup))
+				list = pendingHaulJobs[slotGroup];
+			else
+			{
+				list = new ListTuple();
+				pendingHaulJobs[slotGroup] = list;
+			}
+
+			list.Add(Tuple.Create(stackSize, pawn));
 
 			if (precalculatedSlotGroupTotalPendingStack.ContainsKey(slotGroup))
 			{
@@ -90,8 +106,31 @@ namespace StockpileStackLimit
 
 			if (!pawnsWithHaulingJobs.Contains(pawn))
 				pawnsWithHaulingJobs.Add(pawn);
+			else
+				Log.Warning($"Already found job for {pawn}, adding new one anyway.");
 
 			HeldItemsCounter.UpdateSlotGroup(slotGroup.parent.Map, slotGroup);
+		}
+
+		public static void RecalculatePrecalc()
+		{
+			//CleanupUnusedPendingJobs() ???
+			precalculatedSlotGroupTotalPendingStack.Clear();
+			foreach (var x in pendingHaulJobs)
+			{
+				precalculatedSlotGroupTotalPendingStack[x.Key] = x.Value.Sum(y => y.Var1);
+			}
+		}
+
+		public static void CleanupUnusedPendingJobs()
+		{
+			foreach(Pawn pawn in pawnsWithHaulingJobs)
+			{
+				if (pawn.CurJob == null || pawn.CurJob.def != JobDefOf.HaulToCell)
+				{
+					ClearJobForPawn(pawn);
+				}
+			}
 		}
 	}
 }

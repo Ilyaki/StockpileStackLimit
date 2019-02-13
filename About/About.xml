@@ -7,7 +7,14 @@
 Save friendly!
 	
 Mod compatibility notes:
-- If you have Pick Up And Haul installed, make sure Stockpile Stack Limit is loaded afterwards.</description>
+- If you have Pick Up And Haul installed, make sure Stockpile Stack Limit is loaded afterwards.
+
+v1.1.0 Changelog:
+- Removed log spam.
+- Fixed bugs with large stockpiles and multiple colonists hauling.
+- Fixed limits on containers, e.g. hoppers or shelves.
+- (Very) Big optimisations.
+</description>
 	<url>https://github.com/Ilyaki/StockpileStackLimit</url>
 	<supportedVersions>
 		<li>1.0</li>

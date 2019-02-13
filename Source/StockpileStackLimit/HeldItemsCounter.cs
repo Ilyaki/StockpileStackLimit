@@ -21,7 +21,7 @@ namespace StockpileStackLimit
 
 				if (slotGroups != null)
 				{
-					foreach (SlotGroup slotGroup in slotGroups.Where(x => x != null ))
+					foreach (SlotGroup slotGroup in slotGroups.Where(x => x != null && Limits.HasLimit(x.Settings)))
 					{
 						HeldItemsCounter.UpdateSlotGroup(__instance, slotGroup);
 					}
@@ -30,7 +30,7 @@ namespace StockpileStackLimit
 				}
 			}
 
-			HeldItemsCounter.TestOutput();
+			//HeldItemsCounter.TestOutput();
 		}
 	}
 
@@ -40,14 +40,16 @@ namespace StockpileStackLimit
 
 		public static void TestOutput()
 		{
+#if DEBUG
 			if (heldItems.Count != 0)
 			{
 				var x = heldItems.ElementAt(0).Value;
 				foreach (var y in x)
 				{
-					Log.Message($"{y.Key} : {y.Value}");
+					Log.Message($"{y.Key} : {y.Value} held, and an extra {PendingHaulJobsTracker.GetPendingStack(y.Key)} is pending");
 				}
 			}
+#endif
 		}
 
 		public static void UpdateSlotGroup(Map map, SlotGroup slotGroup)
@@ -64,7 +66,7 @@ namespace StockpileStackLimit
 				dk = heldItems[map];
 			}
 
-			dk[slotGroup] = slotGroup.TotalItemsStack(false);
+			dk[slotGroup] = slotGroup.TotalHeldItemsStack();
 		}
 
 		public static int GetTotalItemsStack(SlotGroup slotGroup)
@@ -85,7 +87,7 @@ namespace StockpileStackLimit
 
 			if (!dk.ContainsKey(slotGroup))
 			{
-				int totalStack = slotGroup.TotalItemsStack(false);
+				int totalStack = slotGroup.TotalHeldItemsStack();
 				dk[slotGroup] = totalStack;
 				return totalStack;
 			}
@@ -100,7 +102,7 @@ namespace StockpileStackLimit
 			if (heldItems.ContainsKey(map))
 			{
 				var dk = heldItems[map];
-				dk.RemoveAll(x => !activeSlotGroups.Contains(x.Key));
+				dk.RemoveAll(x => !activeSlotGroups.Contains(x.Key) || !Limits.HasLimit(x.Key.Settings));
 			}
 		}
 	}

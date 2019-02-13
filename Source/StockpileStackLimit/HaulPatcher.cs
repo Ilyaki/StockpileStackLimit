@@ -31,8 +31,12 @@ namespace StockpileStackLimit
 
 			int toLimit = Limits.GetLimit(toSlotGroup.Settings);
 
-			int currentStack = __result.count < 0 ? t.stackCount : __result.count;
-			
+			//int currentStack = __result.count < 0 ? t.stackCount : __result.count;
+			int stackCount = __result.targetA.Thing.stackCount;
+			if (stackCount < 1) stackCount = int.MaxValue;
+			int currentStack = Math.Min(__result.count, stackCount);
+			currentStack = Math.Min(currentStack, p.carryTracker.AvailableStackSpace(__result.targetA.Thing.def));//TODO: TEST IF THIS WORKS!!!
+
 			bool hasSetFirstLimit = false;
 
 			SlotGroup fromSlotGroup = StoreUtility.GetSlotGroup(t.Position, t.Map);
@@ -43,7 +47,7 @@ namespace StockpileStackLimit
 				if (fromLimit > 0 && StoreUtility.CurrentStoragePriorityOf(t) > StoreUtility.StoragePriorityAtFor(storeCell, t))
 				{
 					//Hauling from limited high priority to low priority. Only haul the minimum necessary to go to exact limit.
-					int stockpileStack1 = fromSlotGroup.TotalItemsStack();
+					int stockpileStack1 = fromSlotGroup.TotalPrecalculatedItemsStack();
 					__result.count = stockpileStack1 - fromLimit;
 					hasSetFirstLimit = true;
 				}
@@ -54,7 +58,7 @@ namespace StockpileStackLimit
 				return;
 			}
 			
-			int stockpileStack = toSlotGroup.TotalItemsStack();
+			int stockpileStack = toSlotGroup.TotalPrecalculatedItemsStack();
 			
 			if (stockpileStack >= toLimit)
 			{
@@ -69,7 +73,7 @@ namespace StockpileStackLimit
 				__result.count = hasSetFirstLimit ? Math.Min(newLimit, __result.count < 0 ? int.MaxValue : __result.count) : newLimit;
 			}
 
-			if (__result.count == 0)
+			if (__result.count <= 0)
 			{
 				JobFailReason.Is(GetNoEmptyPlaceLowerTransString(), null);
 				__result = null;

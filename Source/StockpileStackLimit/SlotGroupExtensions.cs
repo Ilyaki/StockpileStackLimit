@@ -1,25 +1,25 @@
 ﻿using RimWorld;
 using System.Linq;
-using Verse;
 
 namespace StockpileStackLimit
 {
 	static class SlotGroupExtensions
 	{
-		public static int TotalItemsStack(this SlotGroup slotGroup, bool usePrecalculated = true)
+		public static int TotalHeldItemsStack(this SlotGroup slotGroup)
+		{
+			if (slotGroup == null) return 0;
+			
+			return slotGroup.HeldThings.Where(x => StoreUtility.IsInValidStorage(x)).Sum(y => y.stackCount);
+		}
+
+		public static int TotalPrecalculatedItemsStack(this SlotGroup slotGroup, bool usePending = true)
 		{
 			if (slotGroup == null) return 0;
 
-			if (usePrecalculated)
-			{
-				return HeldItemsCounter.GetTotalItemsStack(slotGroup);
-			}
-			else
-			{
-				int pendingSize = PendingHaulJobsTracker.GetPendingStack(slotGroup);
+			int pending = usePending ? PendingHaulJobsTracker.GetPendingStack(slotGroup) : 0;
+			int inSlotGroup = HeldItemsCounter.GetTotalItemsStack(slotGroup);
 
-				return pendingSize + slotGroup.HeldThings.Where(x => StoreUtility.IsInValidStorage(x)).Sum(y => y.stackCount);
-			}
+			return pending + inSlotGroup;
 		}
 	}
 }

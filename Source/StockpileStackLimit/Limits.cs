@@ -23,6 +23,6 @@ namespace StockpileStackLimit
 				limits[settings].Int = limit;
 		}
 
-		public static bool HasLimit(StorageSettings settings) => limits.ContainsKey(settings);
+		public static bool HasLimit(StorageSettings settings) => limits.ContainsKey(settings) && limits[settings].Int != -1;
 	}
 }
