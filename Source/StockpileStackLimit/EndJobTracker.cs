@@ -11,7 +11,7 @@ namespace StockpileStackLimit
 
 		public static void Postfix(Job newJob, Pawn ___pawn, Pawn_JobTracker __instance)
 		{
-			if (newJob.def == JobDefOf.HaulToCell)//TODO: HaulToContainer aswell?
+			if (newJob.def == JobDefOf.HaulToCell)
 			{
 				if (newJob.targetA.HasThing)
 				{
@@ -26,29 +26,6 @@ namespace StockpileStackLimit
 					//int amountCarrying = newJob.count < 0 ? newJob.targetA.Thing.stackCount : newJob.count;
 #if DEBUG
 					Log.Message($"{___pawn} is hauling {newJob.targetA}, count = {amountCarrying}");
-#endif
-
-					PendingHaulJobsTracker.AddNewJob(___pawn, amountCarrying, slotGroup);
-				}
-			}
-			// Seems to never be called TODO: REMOVE
-			  else if (newJob.def == JobDefOf.HaulToContainer)
-			{
-				Log.Message($"{___pawn} is hauling (to container) {newJob.targetA}");
-
-				if (newJob.targetA.HasThing)
-				{
-					Thing thing = newJob.targetA.Thing;
-					SlotGroup slotGroup = newJob.targetB.Thing.GetSlotGroup();
-
-					int stackCount = newJob.targetA.Thing.stackCount;
-					if (stackCount < 1) stackCount = int.MaxValue;
-					int amountCarrying = Math.Min(newJob.count, stackCount);
-					amountCarrying = Math.Min(amountCarrying, ___pawn.carryTracker.AvailableStackSpace(newJob.targetA.Thing.def));
-
-					//int amountCarrying = newJob.count < 0 ? newJob.targetA.Thing.stackCount : newJob.count;
-#if DEBUG
-					Log.Message($"{___pawn} is hauling (to container) {newJob.targetA}, count = {amountCarrying}");
 #endif
 
 					PendingHaulJobsTracker.AddNewJob(___pawn, amountCarrying, slotGroup);

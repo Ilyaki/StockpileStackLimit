@@ -12,7 +12,7 @@ Mod compatibility notes:
 v1.1.0 Changelog:
 - Removed log spam.
 - Fixed bugs with large stockpiles and multiple colonists hauling.
-- Fixed limits on containers, e.g. hoppers or shelves.
+- Fixed limits on hoppers
 - (Very) Big optimisations.
 </description>
 	<url>https://github.com/Ilyaki/StockpileStackLimit</url>

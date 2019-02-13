@@ -10,19 +10,31 @@ namespace StockpileStackLimit
 	{
 		protected override Desc GetDesc() => new Desc(typeof(HaulAIUtility), "HaulToStorageJob");//HaulToCellStorageJob
 
+		public static bool IsHaulToStorageJobRunning { get; private set; } = false;
+
+		public static void Prefix()
+		{
+			IsHaulToStorageJobRunning = true;
+		}
+
 		public static void Postfix(Pawn p, Thing t, ref Job __result)
 		{
-			if (__result == null || p == null || t == null) return;
+			IsHaulToStorageJobRunning = false;
+
+			if (__result == null || p == null || t == null)
+			{
+				return;
+			}
 			
 			IntVec3 storeCell = __result.targetB.Cell;
 			
 			SetCountLimit(p, t, ref __result, storeCell);
 		}
 		
-		private static void SetCountLimit(Pawn p, Thing t, ref Job __result, IntVec3 storeCell)
+		public static void SetCountLimit(Pawn p, Thing t, ref Job __result, IntVec3 storeCell)
 		{
-			SlotGroup toSlotGroup = p.Map.haulDestinationManager.SlotGroupAt(storeCell);
-			
+			SlotGroup toSlotGroup = p.Map.haulDestinationManager.SlotGroupAt(storeCell);// ?? __result.targetB.Thing?.GetSlotGroup();
+
 			if (toSlotGroup == null)
 			{
 				//It is a haul destination without a SlotGroup, e.g. a grave
@@ -35,7 +47,8 @@ namespace StockpileStackLimit
 			int stackCount = __result.targetA.Thing.stackCount;
 			if (stackCount < 1) stackCount = int.MaxValue;
 			int currentStack = Math.Min(__result.count, stackCount);
-			currentStack = Math.Min(currentStack, p.carryTracker.AvailableStackSpace(__result.targetA.Thing.def));//TODO: TEST IF THIS WORKS!!!
+			currentStack = Math.Min(currentStack, p.carryTracker.AvailableStackSpace(__result.targetA.Thing.def));
+
 
 			bool hasSetFirstLimit = false;
 
@@ -98,6 +111,24 @@ namespace StockpileStackLimit
 			}
 
 			return noEmptyPlaceLowerTrans;
+		}
+	}
+
+	class HaulPatcher2 : Patch
+	{
+		protected override Desc GetDesc() => new Desc(typeof(HaulAIUtility), "HaulToCellStorageJob");//HaulToCellStorageJob
+
+		public static void Postfix(Pawn p, Thing t, ref Job __result, IntVec3 storeCell)
+		{
+			if (__result == null || p == null || t == null || storeCell == null)
+			{
+				return;
+			}
+
+			if (!HaulPatcher.IsHaulToStorageJobRunning)//Sometimes RimWorld calls HaulToCellStorageJob without going through HaulToStorageJob
+			{
+				HaulPatcher.SetCountLimit(p, t, ref __result, storeCell);
+			}
 		}
 	}
 }
