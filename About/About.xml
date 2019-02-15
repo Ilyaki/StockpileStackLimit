@@ -14,6 +14,9 @@ v1.1.0 Changelog:
 - Fixed bugs with large stockpiles and multiple colonists hauling.
 - Fixed limits on hoppers
 - (Very) Big optimisations.
+
+v1.2.0 Changelog:
+ - Fixed NullRef errors.
 </description>
 	<url>https://github.com/Ilyaki/StockpileStackLimit</url>
 	<supportedVersions>
