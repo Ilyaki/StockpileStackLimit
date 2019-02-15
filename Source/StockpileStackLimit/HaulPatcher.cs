@@ -86,7 +86,7 @@ namespace StockpileStackLimit
 				__result.count = hasSetFirstLimit ? Math.Min(newLimit, __result.count < 0 ? int.MaxValue : __result.count) : newLimit;
 			}
 
-			if (__result.count <= 0)
+			if (__result != null && __result.count <= 0)
 			{
 				JobFailReason.Is(GetNoEmptyPlaceLowerTransString(), null);
 				__result = null;
