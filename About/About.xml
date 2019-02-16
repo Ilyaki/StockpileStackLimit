@@ -17,6 +17,9 @@ v1.1.0 Changelog:
 
 v1.2.0 Changelog:
  - Fixed NullRef errors.
+
+v1.2.2 Changelog:
+ - Fixed bugs with Pick Up And Haul
 </description>
 	<url>https://github.com/Ilyaki/StockpileStackLimit</url>
 	<supportedVersions>
