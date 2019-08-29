@@ -3,11 +3,17 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <StartAction>Program</StartAction>
     <StartProgram>C:\Program Files %28x86%29\Steam\steamapps\common\RimWorld\RimWorldWin64.exe</StartProgram>
-    <StartArguments>-quicktest</StartArguments>
+    <StartArguments>
+    </StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <StartAction>Program</StartAction>
     <StartProgram>C:\Program Files %28x86%29\Steam\steamapps\common\RimWorld\RimWorldWin64.exe</StartProgram>
     <StartArguments>-quicktest</StartArguments>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug quicktest|AnyCPU'">
+    <StartProgram>C:\Program Files %28x86%29\Steam\steamapps\common\RimWorld\RimWorldWin64.exe</StartProgram>
+    <StartArguments>-quicktest</StartArguments>
+    <StartAction>Program</StartAction>
   </PropertyGroup>
 </Project>

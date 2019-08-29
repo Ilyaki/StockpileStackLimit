@@ -62,10 +62,8 @@ namespace StockpileStackLimit
 			}
 		}
 
-		public static void PatchAll(string id)
+		public static void PatchAll(HarmonyInstance harmonyInstance)
 		{
-			HarmonyInstance harmonyInstance = HarmonyInstance.Create(id);
-
 			foreach (Type type in (from type in Assembly.GetExecutingAssembly().GetTypes()
 								   where type.IsClass && type.BaseType == typeof(Patch)
 								   select type))

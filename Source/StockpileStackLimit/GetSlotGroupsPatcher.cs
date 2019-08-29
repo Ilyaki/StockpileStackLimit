@@ -5,11 +5,11 @@ using Verse;
 
 namespace StockpileStackLimit
 {
-	class GetSlotGroupsPatcher : Patch
+	class GetSlotGroupsPatcher //: Patch
 	{
-		protected override Desc GetDesc() => new Desc(typeof(HaulDestinationManager), "get_AllGroupsListInPriorityOrder");
+		//protected override Desc GetDesc() => new Desc(typeof(HaulDestinationManager), "get_AllGroupsListInPriorityOrder");
 
-		public static void Postfix(ref List<SlotGroup> __result)
+		public static List<SlotGroup> Postfix(List<SlotGroup> __result)
 		{
 			__result = __result.Where(x =>
 			{
@@ -43,6 +43,7 @@ namespace StockpileStackLimit
 				}
 			})*/
 			.ToList();
+            return __result;
 		}
 	}
 
