@@ -1,18 +1,21 @@
-﻿using System;
+﻿using Harmony;
 using Verse;
 
 namespace StockpileStackLimit
 {
-	[StaticConstructorOnStartup]
-	public class ModEntry
-	{
-		public static Random random = new Random();
-		
-		static ModEntry()
-		{
-			Patch.PatchAll("Ilyaki.StockpileStackLimit");
-			Log.Message("StockpileStackLimit loaded");
-		}
-	}
+    [StaticConstructorOnStartup]
+    public static class ModEntry
+    {
+
+        static ModEntry()
+        {
+            var harmony = HarmonyInstance.Create("Ilyaki.StockpileStackLimit");
+#if DEBUG
+            HarmonyInstance.DEBUG = true;
+#endif
+            Patch.PatchAll(harmony);
+            Log.Message("StockpileStackLimit loaded");
+        }
+    }
 }
 

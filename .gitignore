@@ -1,3 +1,5 @@
 
 *.ide-shm
 Source/StockpileStackLimit/.vs/
+Source/StockpileStackLimit/bin/
+Source/StockpileStackLimit/obj/
